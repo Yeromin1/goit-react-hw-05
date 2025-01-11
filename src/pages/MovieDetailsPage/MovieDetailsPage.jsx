@@ -33,7 +33,7 @@ export default function MovieDetailsPage() {
     );
   }
 
-  const defaultImg = "/src/assets/images.jpg";
+  const defaultImg = "https://i.postimg.cc/g0P5qgVm/images.jpg";
 
   return (
     <>

@@ -23,7 +23,7 @@ export default function MovieCast() {
     return <div>Loading...</div>;
   }
 
-  const defaultImg = "/src/assets/images.jpg";
+  const defaultImg = "https://i.postimg.cc/g0P5qgVm/images.jpg";
 
   return (
     <>
