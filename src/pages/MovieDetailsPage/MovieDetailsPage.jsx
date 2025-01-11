@@ -73,12 +73,12 @@ export default function MovieDetailsPage() {
         <ul className={s.movie_add_info_list}>
           <li className={s.movie_add_info_link}>
             <Link to="cast" state={location.state}>
-              cast
+              Cast
             </Link>
           </li>
           <li className={s.movie_add_info_link}>
             <Link to="reviews" state={location.state}>
-              reviews
+              Reviews
             </Link>
           </li>
         </ul>
