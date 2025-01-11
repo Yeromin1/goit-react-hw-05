@@ -1,12 +1,15 @@
-import styles from "./NotFoundPage.module.css";
+import { Link } from "react-router-dom";
+import { BsBoxArrowLeft } from "react-icons/bs";
+import s from "./NotFoundPage.module.css";
 
-const NotFoundPage = () => {
+export default function NotFoundPage() {
   return (
-    <div className={styles.notFoundContainer}>
-      <h1>Page Not Found</h1>
-      <p>The page you are looking for doesn't exist.</p>
+    <div>
+      <p>Page not found...</p>
+      <Link className={s.notfound_backlink} to="/">
+        <BsBoxArrowLeft />
+        Go Home
+      </Link>
     </div>
   );
-};
-
-export default NotFoundPage;
+}

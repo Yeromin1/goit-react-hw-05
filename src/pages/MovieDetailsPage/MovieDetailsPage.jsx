@@ -1,85 +1,91 @@
-import { useParams, useLocation, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { API_KEY } from "/src/constants.js";
-import styles from "./MovieDetailsPage.module.css";
-import MovieCast from "/src/components/MovieCast/MovieCast";
-import MovieReviews from "/src/components/MovieReviews/MovieReviews";
+import { Suspense, useEffect, useState } from "react";
+import { Link, Outlet, useLocation, useParams } from "react-router-dom";
+import { BsBoxArrowLeft } from "react-icons/bs";
+import Navigation from "../../components/Navigation/Navigation";
+import { getFilmById } from "../../constants.js";
+import s from "./MovieDetailsPage.module.css";
 
-const MovieDetailsPage = () => {
+export default function MovieDetailsPage() {
   const { movieId } = useParams();
-  const location = useLocation();
-  const [movie, setMovie] = useState(null);
-  const [activeTab, setActiveTab] = useState(null);
+  const [filmById, setFilmById] = useState(null);
 
   useEffect(() => {
-    const fetchMovieDetails = async () => {
-      const movieResponse = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`
-      );
-      setMovie(movieResponse.data);
+    const getFilm = async () => {
+      try {
+        const response = await getFilmById(movieId);
+        setFilmById(response);
+      } catch (error) {
+        alert(error);
+      }
     };
-
-    fetchMovieDetails();
+    getFilm();
   }, [movieId]);
 
-  if (!movie) return <div>Loading...</div>;
+  const location = useLocation();
+  const backLink = location.state ?? "/movies";
 
-  const handleTabClick = (tab) => {
-    if (activeTab === tab) {
-      setActiveTab(null);
-    } else {
-      setActiveTab(tab);
-    }
-  };
+  if (!filmById) {
+    return (
+      <>
+        <Navigation />
+        <div>Loading...</div>
+      </>
+    );
+  }
+
+  const defaultImg = "/src/assets/images.jpg";
 
   return (
-    <div className={styles.movieDetails}>
-      <Link to={location.state?.from || "/movies"} className={styles.goBack}>
+    <>
+      <Navigation />
+      <Link to={backLink} className={s.movie_details_backlink}>
+        <BsBoxArrowLeft />
         Go back
       </Link>
-
-      <h2>{movie.title}</h2>
-      <img
-        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-        alt={movie.title}
-        className={styles.movieImage}
-      />
-      <p>
-        <strong>User Score:</strong> {movie.vote_average * 10}%
-      </p>
-      <p>
-        <strong>Overview:</strong> {movie.overview}
-      </p>
-      <p>
-        <strong>Genres:</strong>{" "}
-        {movie.genres.map((genre) => genre.name).join(", ")}
-      </p>
-
-      <h3>Additional Information</h3>
-      <ul className={styles.additionalInfo}>
-        <li>
-          <Link
-            to={`/movies/${movieId}/cast`}
-            onClick={() => handleTabClick("cast")}
-          >
-            Cast
-          </Link>
-        </li>
-        <li>
-          <Link
-            to={`/movies/${movieId}/reviews`}
-            onClick={() => handleTabClick("reviews")}
-          >
-            Reviews
-          </Link>
-        </li>
-      </ul>
-
-      {activeTab === "cast" && <MovieCast movieId={movieId} />}
-      {activeTab === "reviews" && <MovieReviews movieId={movieId} />}
-    </div>
+      <div className={s.movie_details_wrapper}>
+        <div className={s.movie_maindetails_wrapper}>
+          <img
+            className={s.movie_img}
+            src={
+              filmById.backdrop_path
+                ? `https://image.tmdb.org/t/p/w500${filmById.backdrop_path}`
+                : defaultImg
+            }
+            alt={filmById.title}
+          />
+          <div className={s.movie_infodetails_wrapper}>
+            <p className={s.movie_title}>{filmById.title}</p>
+            <p className={s.movie_score}>
+              User score: {Math.floor(filmById.vote_average * 10)}%
+            </p>
+            <p>Overview: {filmById.overview}</p>
+            <p className={s.movie_genres_title}>Genres: </p>
+            {filmById.genres && (
+              <ul className={s.movie_genres}>
+                {filmById.genres.map((item, index) => (
+                  <li key={index}>{item.name}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+        <p className={s.movie_add_info}>Additional information</p>
+        <ul className={s.movie_add_info_list}>
+          <li className={s.movie_add_info_link}>
+            <Link to="cast" state={location.state}>
+              cast
+            </Link>
+          </li>
+          <li className={s.movie_add_info_link}>
+            <Link to="reviews" state={location.state}>
+              reviews
+            </Link>
+          </li>
+        </ul>
+      </div>
+      <Suspense fallback={<div>Loading page...</div>}>
+        <Outlet />
+      </Suspense>
+    </>
   );
-};
-
-export default MovieDetailsPage;
+}

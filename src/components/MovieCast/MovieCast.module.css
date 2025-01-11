@@ -1,0 +1,15 @@
+.movie_cast_list {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(4, 200px);
+}
+
+.movie_cast {
+  margin-bottom: 24px;
+}
+
+.movie_cast_img {
+  width: 160px;
+  height: 240px;
+  border-radius: 8px;
+}

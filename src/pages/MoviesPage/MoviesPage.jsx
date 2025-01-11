@@ -1,49 +1,66 @@
-import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
 import MovieList from "../../components/MovieList/MovieList";
-import { API_KEY } from "/src/constants.js";
+import Navigation from "../../components/Navigation/Navigation";
 import { useSearchParams } from "react-router-dom";
+import { getSearchFilms } from "../../constants.js";
+import s from "./MoviesPage.module.css";
 
-const MoviesPage = () => {
-  const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState([]);
+export default function MoviesPage() {
+  const [searchFilm, setSearchFilm] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("query");
 
-  const handleSearch = useCallback(async () => {
-    if (!query) return;
-    const response = await axios.get(
-      `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${query}`
-    );
-    setMovies(response.data.results);
-  }, [query]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const searchValue = e.target.elements.searchName.value.trim();
 
-  useEffect(() => {
-    const queryParam = searchParams.get("query");
-    if (queryParam) {
-      setQuery(queryParam);
-      handleSearch();
+    if (searchValue === "") {
+      alert("bad request");
+      setSearchFilm([]);
+
+      return;
     }
-  }, [searchParams, handleSearch]);
-
-  const handleSearchClick = () => {
-    if (query) {
-      setSearchParams({ query });
-      handleSearch();
-    }
+    setSearchFilm(null);
+    setSearchParams({ query: searchValue.toLowerCase() });
+    e.target.reset();
   };
 
-  return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search for movies..."
-        onChange={(e) => setQuery(e.target.value)}
-        value={query}
-      />
-      <button onClick={handleSearchClick}>Search</button>
-      <MovieList movies={movies} />
-    </div>
-  );
-};
+  useEffect(() => {
+    async function getFilms() {
+      if (!query) {
+        return;
+      }
+      try {
+        const response = await getSearchFilms(query);
+        if (response.length === 0) {
+          setSearchFilm([]);
+          alert("Films not exist. Change your query.");
+          return;
+        }
+        setSearchFilm(response);
+      } catch (error) {
+        alert(error);
+      }
+    }
+    getFilms();
+  }, [query]);
 
-export default MoviesPage;
+  return (
+    <>
+      <Navigation />
+
+      <form onSubmit={handleSubmit}>
+        <input
+          className={s.movies_page_inp}
+          type="text"
+          name="searchName"
+          id=""
+        />
+        <button className={s.movies_page_btn} type="submit">
+          Search
+        </button>
+      </form>
+      {searchFilm ? <MovieList films={searchFilm} /> : <div>Loading...</div>}
+    </>
+  );
+}

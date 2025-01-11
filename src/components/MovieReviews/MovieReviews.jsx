@@ -1,45 +1,46 @@
-import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import axios from "axios";
-import { API_KEY } from "/src/constants.js";
-import styles from "./MovieReviews.module.css";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getReviewsById } from "../../constants.js";
+import s from "./MovieReviews.module.css";
 
-const MovieReviews = ({ movieId }) => {
-  const [reviews, setReviews] = useState([]);
+export default function MovieReviews() {
+  const { movieId } = useParams();
+  const [reviewsFilmById, setReviewsFilmById] = useState(null);
 
   useEffect(() => {
-    const fetchReviews = async () => {
+    const getReviews = async () => {
       try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=${API_KEY}`
-        );
-        setReviews(response.data.results);
+        const response = await getReviewsById(movieId);
+        setReviewsFilmById(response);
       } catch (error) {
-        console.error("Error fetching reviews", error);
+        alert(error);
       }
     };
-
-    fetchReviews();
+    getReviews();
   }, [movieId]);
 
+  if (!reviewsFilmById) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className={styles.reviewsContainer}>
-      {reviews.length > 0 ? (
-        reviews.map((review) => (
-          <div key={review.id} className={styles.reviewCard}>
-            <h4>{review.author}</h4>
-            <p>{review.content}</p>
-          </div>
-        ))
-      ) : (
-        <p>We don't have any reviews for this movie.</p>
-      )}
-    </div>
+    <>
+      <ul className={s.movie_reviews_list}>
+        {reviewsFilmById.length > 0 ? (
+          reviewsFilmById.map((item) => {
+            return (
+              <li key={item.id}>
+                <div className={s.movie_reviews_title}>
+                  author: {item.author}
+                </div>
+                <div>{item.content}</div>
+              </li>
+            );
+          })
+        ) : (
+          <div>We don't have any reviews for this movie.</div>
+        )}
+      </ul>
+    </>
   );
-};
-
-MovieReviews.propTypes = {
-  movieId: PropTypes.string.isRequired,
-};
-
-export default MovieReviews;
+}

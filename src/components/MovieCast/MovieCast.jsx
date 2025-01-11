@@ -1,48 +1,55 @@
-import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import axios from "axios";
-import { API_KEY } from "/src/constants.js";
-import styles from "./MovieCast.module.css";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getCastById } from "../../constants.js";
+import s from "./MovieCast.module.css";
 
-const MovieCast = ({ movieId }) => {
-  const [cast, setCast] = useState([]);
+export default function MovieCast() {
+  const { movieId } = useParams();
+  const [castFilmById, setCastFilmById] = useState(null);
 
   useEffect(() => {
-    const fetchCast = async () => {
+    const getCast = async () => {
       try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}`
-        );
-        setCast(response.data.cast);
+        const response = await getCastById(movieId);
+        setCastFilmById(response);
       } catch (error) {
-        console.error("Error fetching cast", error);
+        alert(error);
       }
     };
-
-    fetchCast();
+    getCast();
   }, [movieId]);
 
+  if (!castFilmById) {
+    return <div>Loading...</div>;
+  }
+
+  const defaultImg = "/src/assets/images.jpg";
+
   return (
-    <div className={styles.castContainer}>
-      <div className={styles.castList}>
-        {cast.map((actor) => (
-          <div key={actor.id} className={styles.actorCard}>
-            <img
-              src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}
-              alt={actor.name}
-              className={styles.actorImage}
-            />
-            <h4>{actor.name}</h4>
-            <p>{actor.character}</p>
-          </div>
-        ))}
-      </div>
-    </div>
+    <>
+      <ul className={s.movie_cast_list}>
+        {castFilmById.length > 0 ? (
+          castFilmById.map((item) => {
+            return (
+              <li className={s.movie_cast} key={item.id}>
+                <img
+                  className={s.movie_cast_img}
+                  src={
+                    item.profile_path
+                      ? `https://image.tmdb.org/t/p/w500${item.profile_path}`
+                      : defaultImg
+                  }
+                  alt={item.character}
+                />
+                <p>name: {item.name} </p>
+                <p>character: {item.character} </p>
+              </li>
+            );
+          })
+        ) : (
+          <div>There are no cast in this movie...</div>
+        )}
+      </ul>
+    </>
   );
-};
-
-MovieCast.propTypes = {
-  movieId: PropTypes.string.isRequired,
-};
-
-export default MovieCast;
+}

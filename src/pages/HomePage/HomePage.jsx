@@ -1,37 +1,34 @@
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { API_KEY } from "/src/constants.js";
-import styles from "./HomePage.module.css";
+import { useEffect, useState } from "react";
+import MovieList from "../../components/MovieList/MovieList";
+import Navigation from "../../components/Navigation/Navigation";
+import s from "./HomePage.module.css";
+import { getHomePageFilms } from "../../constants.js";
 
-const HomePage = () => {
-  const [movies, setMovies] = useState([]);
+export default function HomePage() {
+  const [homePageFilms, setHomePageFilms] = useState(null);
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`
-      );
-      setMovies(response.data.results);
-    };
-
-    fetchMovies();
+    async function fetchFilms() {
+      try {
+        const response = await getHomePageFilms();
+        setHomePageFilms(response);
+      } catch (error) {
+        alert(error);
+      }
+    }
+    fetchFilms();
   }, []);
 
   return (
-    <div className={styles.homePage}>
-      <h1>Trending Today</h1>
-      <div className={styles.movieList}>
-        {movies.map((movie) => (
-          <div key={movie.id} className={styles.movieItem}>
-            <Link to={`/movies/${movie.id}`}>
-              <h3>{movie.title}</h3>
-            </Link>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
+    <>
+      <Navigation />
 
-export default HomePage;
+      <h3 className={s.home_page_title}>Trending today</h3>
+      {homePageFilms ? (
+        <MovieList films={homePageFilms} />
+      ) : (
+        <div>Loading...</div>
+      )}
+    </>
+  );
+}

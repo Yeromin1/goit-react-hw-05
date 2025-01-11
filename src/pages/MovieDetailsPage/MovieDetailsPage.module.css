@@ -1,82 +1,82 @@
-.movieDetails {
-  padding: 20px;
-  text-align: center;
+.movie_details_backlink {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid grey;
+  border-radius: 8px;
+  margin: 10px 0 10px 20px;
+  padding: 6px 10px;
+  width: 120px;
 }
 
-.movieDetails img {
-  width: 300px;
+.movie_details_backlink:hover {
+  color: blue;
+}
+
+.movie_details_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 32px;
+}
+
+.movie_maindetails_wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.movie_img {
+  width: 400px;
   height: auto;
   border-radius: 8px;
 }
 
-.movieDetails h2 {
-  margin-top: 20px;
+.movie_infodetails_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.movieDetails p {
+.movie_title {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.movie_score {
   font-size: 18px;
-  margin-top: 20px;
+  font-weight: 600;
+  margin-left: 24px;
 }
 
-.movieDetails .goBack {
-  display: inline-block;
-  margin-bottom: 20px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
+.movie_genres_title {
+  font-size: 20px;
+  font-weight: 600;
 }
 
-.movieDetails .goBack:hover {
-  background-color: #0056b3;
+.movie_genres {
+  font-size: 18px;
+  font-weight: 600;
+  margin-left: 24px;
+  display: flex;
+  gap: 18px;
 }
 
-.movieDetails h3 {
-  margin-top: 30px;
-  font-size: 22px;
+.movie_add_info {
+  font-size: 18px;
+  font-weight: 600;
+  font-style: italic;
 }
 
-.additionalInfo {
-  list-style-type: none;
-  padding: 0;
+.movie_add_info_list {
+  list-style-type: disc;
+  margin-left: 40px;
 }
 
-.additionalInfo li {
-  margin: 10px 0;
+.movie_add_info_link {
+  font-weight: 600;
+  font-style: italic;
 }
 
-.additionalInfo a {
-  text-decoration: none;
-  color: #007bff;
-  cursor: pointer;
-}
-
-.additionalInfo a:hover {
-  text-decoration: underline;
-}
-
-.castList,
-.reviewsList {
-  list-style-type: none;
-  padding: 0;
-}
-
-.castList li,
-.reviewsList li {
-  margin: 10px 0;
-}
-
-.actorImage {
-  width: 50px;
-  height: 75px;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-.actorImage + p {
-  display: inline-block;
-  vertical-align: top;
-  font-size: 16px;
-  margin-left: 10px;
+.movie_add_info_link:hover {
+  color: blue;
 }
