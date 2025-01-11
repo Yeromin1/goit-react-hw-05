@@ -1,0 +1,13 @@
+.link {
+    text-decoration: none;
+    color: black;
+  }
+  
+  .link:hover {
+    color: blue;
+  }
+  
+  .active {
+    color: red;  /* Становится красной при активной ссылке */
+  }
+  

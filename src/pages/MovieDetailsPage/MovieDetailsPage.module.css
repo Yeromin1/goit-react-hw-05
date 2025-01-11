@@ -1,0 +1,82 @@
+.movieDetails {
+  padding: 20px;
+  text-align: center;
+}
+
+.movieDetails img {
+  width: 300px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.movieDetails h2 {
+  margin-top: 20px;
+}
+
+.movieDetails p {
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.movieDetails .goBack {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.movieDetails .goBack:hover {
+  background-color: #0056b3;
+}
+
+.movieDetails h3 {
+  margin-top: 30px;
+  font-size: 22px;
+}
+
+.additionalInfo {
+  list-style-type: none;
+  padding: 0;
+}
+
+.additionalInfo li {
+  margin: 10px 0;
+}
+
+.additionalInfo a {
+  text-decoration: none;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.additionalInfo a:hover {
+  text-decoration: underline;
+}
+
+.castList,
+.reviewsList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.castList li,
+.reviewsList li {
+  margin: 10px 0;
+}
+
+.actorImage {
+  width: 50px;
+  height: 75px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.actorImage + p {
+  display: inline-block;
+  vertical-align: top;
+  font-size: 16px;
+  margin-left: 10px;
+}
